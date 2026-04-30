@@ -1,8 +1,13 @@
+"use server";
+
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { sendVerificationEmail } from "@/lib/mail";
+
+// ✅ import BOTH emails
+
+import { sendWelcomeEmail } from "@/lib/sendWelcomeEmail";
 
 export async function POST(req: Request) {
   try {
@@ -45,6 +50,7 @@ export async function POST(req: Request) {
     // ✅ HASH PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ✅ CREATE USER
     const user = await prisma.user.create({
       data: {
         name,
@@ -54,38 +60,42 @@ export async function POST(req: Request) {
       },
     });
 
-    // ✅ CREATE TOKEN
+    // ✅ CREATE VERIFICATION TOKEN
     const token = crypto.randomBytes(32).toString("hex");
 
     await prisma.verificationToken.create({
       data: {
         identifier: user.email!,
         token,
-        expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+        expires: new Date(Date.now() + 1000 * 60 * 60),
       },
     });
 
-    // ✅ SEND EMAIL (SAFE WRAP)
+    // 🚀 SEND EMAILS (DO NOT BREAK FLOW IF THEY FAIL)
     try {
-      await sendVerificationEmail(user.email!, token);
+      // 👉 1. Send welcome email immediately
+      await sendWelcomeEmail(user.email!, user.name || undefined);
+
+      // 👉 2. Send verification email
+  
+
     } catch (mailError) {
       console.error("MAIL ERROR:", mailError);
 
-      // ⚠️ Don't fail registration because of email
       return NextResponse.json({
         warning:
-          "Account created, but we couldn’t send verification email. Try again later.",
+          "Account created, but we couldn’t send some emails. You can request them again.",
       });
     }
 
     return NextResponse.json({
-      message: "Account created. Check your email to verify your account.",
+      message:
+        "Account created successfully. Check your email to verify your account.",
     });
 
   } catch (error: any) {
     console.error("REGISTER ERROR:", error);
 
-    // 🔥 HANDLE KNOWN PRISMA ERRORS
     if (error.code === "P2002") {
       return NextResponse.json(
         { error: "This email is already registered" },
