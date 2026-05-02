@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRandomAvatar } from "@/lib/avatar";
-
+import { signOut } from "next-auth/react";
 export default function ProfilePage() {
   const router = useRouter();
   const { data: session, update, status } = useSession();
@@ -133,31 +133,29 @@ export default function ProfilePage() {
   };
 
   const handleDelete = async () => {
-    const ok = window.confirm("Delete your account permanently?");
-    if (!ok) return;
+  const ok = window.confirm("Delete your account permanently?");
+  if (!ok) return;
 
-    try {
-      setLoading(true);
-      const res = await fetch("/api/profile/delete", { method: "DELETE" });
-      const data = await res.json().catch(() => ({}));
+  try {
+    setLoading(true);
 
-      if (!res.ok) {
-        throw new Error(data?.message || "Failed to delete account");
-      }
+    const res = await fetch("/api/profile/delete", {
+      method: "DELETE",
+    });
 
-      await fetch("/api/auth/signout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ callbackUrl: "/" }),
-      });
+    const data = await res.json().catch(() => ({}));
 
-      window.location.href = "/";
-    } catch (err: any) {
-      showToast("error", err?.message || "Please try again");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(data?.message || "Failed to delete account");
     }
-  };
+
+    await signOut({ callbackUrl: "/" });
+  } catch (err: any) {
+    showToast("error", err?.message || "Please try again");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputCls =
     "w-full rounded-xl border-[1.5px] border-[#ede9fe] bg-[#faf9ff] px-4 py-3 text-sm text-[#1a1a2e] outline-none transition focus:border-[#6c47ff] focus:shadow-[0_0_0_3px_rgba(108,71,255,0.1)]";

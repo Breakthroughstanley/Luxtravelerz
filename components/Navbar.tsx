@@ -67,7 +67,7 @@ export default function Navbar() {
       <Link
         key={l.name}
         href={l.href}
-        className="flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-white hover:text-[#6c47ff] hover:shadow-sm"
+        className="flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-[#6c47ff] transition hover:bg-white hover:text-[#6c47ff] hover:shadow-sm"
       >
         <Icon size={18} />
         {l.name}
