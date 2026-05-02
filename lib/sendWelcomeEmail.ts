@@ -96,11 +96,16 @@ export const sendWelcomeEmail = async (
             letter-spacing: 0.12em;
             text-transform: uppercase;
             margin-bottom: 26px;
+            line-height: 1;
           }
 
           .badge::before {
             content: '✦';
             font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
           }
 
           .title {
@@ -171,6 +176,8 @@ export const sendWelcomeEmail = async (
             margin: 0 auto 24px;
             font-size: 28px;
             border: 2px solid rgba(255, 255, 255, 0.3);
+            line-height: 1;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
           }
 
           .verify-title {
@@ -258,6 +265,8 @@ export const sendWelcomeEmail = async (
             font-size: 22px;
             margin-bottom: 16px;
             box-shadow: 0 4px 12px rgba(108, 71, 255, 0.2);
+            line-height: 1;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
           }
 
           .feature-title {
@@ -303,6 +312,8 @@ export const sendWelcomeEmail = async (
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            line-height: 1;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
           }
 
           .benefit-content {
@@ -472,6 +483,8 @@ export const sendWelcomeEmail = async (
             font-size: 18px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(108, 71, 255, 0.2);
+            line-height: 1;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
           }
 
           .social-link:hover {
