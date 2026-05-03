@@ -1,43 +1,5 @@
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export const ICONS: Record<string, string> = {
-  plane: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="white"/></svg>`,
-
-  island: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 7c0 1.657-1.343 3-3 3S7 8.657 7 7s1.343-3 3-3 3 1.343 3 3z" fill="white"/><path d="M12.5 10.5C11.12 11.45 10 13.1 10 15H3c0-3.5 2.5-6.5 6-7.2" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M2 19h20M5 19c0-3 2-5.5 5-6.5M12 19c0-2 .8-4 2.5-5.5M16 19c0-1.5.5-3 1.5-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-
-  globe: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5"/><path d="M12 3c-2.4 2.4-3.5 5-3.5 9s1.1 6.6 3.5 9M12 3c2.4 2.4 3.5 5 3.5 9s-1.1 6.6-3.5 9M3 12h18" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-
-  diamond: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3h12l4 6-10 12L2 9l4-6z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
-
-  target: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="5" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="1" fill="white"/></svg>`,
-
-  tag: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 2H7a2 2 0 0 0-2 2v5.5a1 1 0 0 0 .293.707l9 9a2 2 0 0 0 2.828 0l5.086-5.086a2 2 0 0 0 0-2.828l-9-9A1 1 0 0 0 12.5 2z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
-
-  shield: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11 4.5-.85 8-5.75 8-11V6l-8-4z" stroke="white" stroke-width="1.5"/></svg>`,
-
-  mail: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="20" height="16" rx="2" stroke="white" stroke-width="1.5"/><path d="M2 7l10 7 10-7" stroke="white" stroke-width="1.5"/></svg>`,
-
-  instagram: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="white" stroke-width="1.5"/></svg>`,
-
-  twitter: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 18c6 2 12-2 12-8 0-1 2-3 3-4-1 0-3 1-4 1-1-2-4-2-5 0-2-1-4-2-6-1 0 6 3 10 10 12" stroke="white" stroke-width="1.5"/></svg>`,
-
-  linkedin: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="white" stroke-width="1.5"/><path d="M7 10v7M12 10v7M17 10v7" stroke="white" stroke-width="1.5"/></svg>`,
-
-  star: `<svg width="12" height="12" viewBox="0 0 24 24" fill="#6c47ff"><path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"/></svg>`,
-};
-
-export const sendWelcomeEmail = async (
-  email: string,
-  token: string,
-  name?: string
-) => {
-  const verifyLink = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
-  const siteUrl = process.env.NEXTAUTH_URL;
-  const logoUrl = `${siteUrl}/logo1.png`;
-
-  const html = `<!DOCTYPE html>
+<!-- preview.html -->
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="UTF-8" />
@@ -432,12 +394,4 @@ export const sendWelcomeEmail = async (
 </div>
 </div>
 </body>
-</html>`;
-
-  await resend.emails.send({
-    from: "LuxTravelerz <noreply@luxtravelerz.com>",
-    to: email,
-    subject: "Welcome to LuxTravelerz — Verify Your Email",
-    html,
-  });
-};
+</html>

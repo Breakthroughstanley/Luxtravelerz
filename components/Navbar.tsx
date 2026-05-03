@@ -187,7 +187,7 @@ export default function Navbar() {
               <div className="border-t border-gray-100 p-2">
                 <button
                   onClick={() => signOut()}
-                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-red-500 transition hover:bg-red-50"
+                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-red-500 transition hover:bg-purple-50"
                 >
                   <MdLogout size={18} />
                   Sign out
