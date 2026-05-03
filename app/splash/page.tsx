@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import RegisterModal from "@/components/RegisterModal";
 const IMAGES = [
-  "/images/hero-bg.jpg",
+  "/images/hero-bg-4.jpg",
   "/images/hero-bg-2.jpg",
   "/images/hero-bg-3.jpg",
 ];
