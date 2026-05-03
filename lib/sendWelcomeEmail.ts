@@ -166,7 +166,7 @@ export const sendWelcomeEmail = async (
     </div>
 
     <div class="badge-wrap">
-      <span class="badge">${ICONS.star}&nbsp;&nbsp;Premium Travel Platform&nbsp;&nbsp;${ICONS.star}</span>
+      <span class="badge"><img src="https://your-site.netlify.app/email-icons/star.png" width="22" height="22" />&nbsp;&nbsp;Premium Travel Platform&nbsp;&nbsp;<img src="https://your-site.netlify.app/email-icons/star.png" width="22" height="22" /></span>
     </div>
 
     <h1 class="headline">
@@ -196,7 +196,7 @@ export const sendWelcomeEmail = async (
       <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 24px;position:relative;z-index:1;">
         <tr>
           <td width="72" height="72" align="center" valign="middle" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.25);border-radius:36px;">
-            ${ICONS.mail}
+      <img src="https://your-site.netlify.app/email-icons/mail.png" width="22" height="22" />
           </td>
         </tr>
       </table>
@@ -227,7 +227,7 @@ export const sendWelcomeEmail = async (
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="feature-icon-cell" width="48" height="48" style="border-radius:14px;">
-                  ${ICONS.plane}
+                <img src="https://your-site.netlify.app/email-icons/plane.png" width="22" height="22" />
                 </td>
               </tr>
             </table>
@@ -240,7 +240,7 @@ export const sendWelcomeEmail = async (
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="feature-icon-cell" width="48" height="48" style="border-radius:14px;">
-                  ${ICONS.island}
+                 <img src="https://your-site.netlify.app/email-icons/island.png" width="22" height="22" />
                 </td>
               </tr>
             </table>
@@ -255,7 +255,7 @@ export const sendWelcomeEmail = async (
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="feature-icon-cell" width="48" height="48" style="border-radius:14px;">
-                  ${ICONS.globe}
+             <img src="https://your-site.netlify.app/email-icons/globe.png" width="22" height="22" />
                 </td>
               </tr>
             </table>
@@ -268,7 +268,7 @@ export const sendWelcomeEmail = async (
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="feature-icon-cell" width="48" height="48" style="border-radius:14px;">
-                  ${ICONS.diamond}
+             <img src="https://your-site.netlify.app/email-icons/diamond.png" width="22" height="22" />
                 </td>
               </tr>
             </table>
@@ -292,7 +292,7 @@ export const sendWelcomeEmail = async (
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td class="benefit-icon-cell" width="42" height="42" style="border-radius:13px;">
-                    ${ICONS.target}
+                    <img src="https://your-site.netlify.app/email-icons/target.png" width="22" height="22" />
                   </td>
                 </tr>
               </table>
@@ -314,7 +314,7 @@ export const sendWelcomeEmail = async (
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td class="benefit-icon-cell" width="42" height="42" style="border-radius:13px;">
-                    ${ICONS.tag}
+                  <img src="https://your-site.netlify.app/email-icons/tag.png" width="22" height="22" />
                   </td>
                 </tr>
               </table>
@@ -336,7 +336,7 @@ export const sendWelcomeEmail = async (
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td class="benefit-icon-cell" width="42" height="42" style="border-radius:13px;">
-                    ${ICONS.shield}
+               <img src="https://your-site.netlify.app/email-icons/shield.png" width="22" height="22" />
                   </td>
                 </tr>
               </table>
@@ -402,21 +402,21 @@ export const sendWelcomeEmail = async (
         <td style="padding:0 8px;">
           <a href="#" class="social-btn" title="Instagram" style="line-height:44px;">
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-              <tr><td width="44" height="44" align="center" valign="middle">${ICONS.instagram}</td></tr>
+              <tr><td width="44" height="44" align="center" valign="middle"><img src="https://your-site.netlify.app/email-icons/instagram.png" width="22" height="22" /></td></tr>
             </table>
           </a>
         </td>
         <td style="padding:0 8px;">
           <a href="#" class="social-btn" title="Twitter / X" style="line-height:44px;">
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-              <tr><td width="44" height="44" align="center" valign="middle">${ICONS.twitter}</td></tr>
+              <tr><td width="44" height="44" align="center" valign="middle"><img src="https://your-site.netlify.app/email-icons/twitter.png" width="22" height="22" /></td></tr>
             </table>
           </a>
         </td>
         <td style="padding:0 8px;">
           <a href="#" class="social-btn" title="LinkedIn" style="line-height:44px;">
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-              <tr><td width="44" height="44" align="center" valign="middle">${ICONS.linkedin}</td></tr>
+              <tr><td width="44" height="44" align="center" valign="middle"><img src="https://your-site.netlify.app/email-icons/linkedin.png" width="22" height="22" /></td></tr>
             </table>
           </a>
         </td>
