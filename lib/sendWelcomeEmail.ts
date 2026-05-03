@@ -33,7 +33,7 @@ export const sendWelcomeEmail = async (
   token: string,
   name?: string
 ) => {
-  const verifyLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
+const verifyLink = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
   const siteUrl = process.env.NEXTAUTH_URL;
   const logoUrl = `${siteUrl}/logo1.png`;
 
