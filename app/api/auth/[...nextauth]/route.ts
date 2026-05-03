@@ -78,16 +78,16 @@ export const authOptions: AuthOptions = {
 
 callbacks: {
  async signIn({ user, account }) {
-  if (account?.provider === "google" && user.email) {
+  if (account?.provider === "google") {
     await prisma.user.upsert({
-      where: {
-        email: user.email,
-      },
+      where: { email: user.email! },
       update: {
         emailVerified: new Date(),
+        name: user.name,
+        image: user.image,
       },
       create: {
-        email: user.email,
+        email: user.email!,
         name: user.name,
         image: user.image,
         emailVerified: new Date(),
@@ -97,6 +97,8 @@ callbacks: {
 
   return true;
 },
+
+
 
   async jwt({ token, user }) {
     if (user) {
