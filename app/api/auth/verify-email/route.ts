@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const { token } = await req.json();
+    const { searchParams } = new URL(req.url);
+
+    const token = searchParams.get("token");
 
     if (!token) {
       return NextResponse.json(
@@ -23,7 +25,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔥 ADD THIS (expiry check)
+    // token expiry check
     if (record.expires < new Date()) {
       return NextResponse.json(
         { error: "Token expired" },
@@ -31,20 +33,26 @@ export async function POST(req: Request) {
       );
     }
 
+    // verify user
     await prisma.user.update({
-      where: { email: record.identifier },
+      where: {
+        email: record.identifier,
+      },
       data: {
         emailVerified: new Date(),
       },
     });
 
+    // delete token after verification
     await prisma.verificationToken.delete({
-      where: { token },
+      where: {
+        token,
+      },
     });
 
-    return NextResponse.json(
-      { message: "Email verified successfully" },
-      { status: 200 }
+    // redirect after success
+    return NextResponse.redirect(
+      `${process.env.NEXTAUTH_URL}/login?verified=true`
     );
 
   } catch (err) {
