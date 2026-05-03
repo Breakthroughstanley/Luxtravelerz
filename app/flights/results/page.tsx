@@ -254,7 +254,7 @@ function FilterPanel({ filters, setFilters, flights }: FilterPanelProps): ReactN
   );
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 p-6 h-fit sticky top-20">
+    <div className="bg-white rounded-3xl border border-gray-200 p-5 md:p-6 h-fit lg:sticky lg:top-20">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -370,7 +370,7 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
       }`}
     >
       {/* Main flight info */}
-      <div className="p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+  <div className="p-4 sm:p-5 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         {/* Left: Airline & Times */}
         <div className="flex-1">
           <div className="flex items-center gap-4 mb-4">
@@ -386,9 +386,9 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div>
-              <p className="text-3xl font-bold text-gray-900">
+             <p className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {flight.departure}
               </p>
               <p className="text-xs text-gray-500">{flight.from}</p>
@@ -420,7 +420,7 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
         </div>
 
         {/* Right: Price & Rating */}
-        <div className="lg:text-right flex lg:flex-col gap-4 lg:gap-2 items-center lg:items-end justify-between lg:justify-start">
+      <div className="flex flex-col sm:flex-row xl:flex-col gap-4 xl:gap-2 items-start sm:items-center xl:items-end justify-between xl:justify-start">
           <div>
             <p className="text-xs text-gray-500 mb-1">From</p>
             <p className="text-3xl font-bold text-[#6c47ff]">
@@ -440,7 +440,7 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
 
           <button
             onClick={handleSelectClick}
-            className="px-6 py-3 bg-gradient-to-r from-[#6c47ff] to-[#5a3dd4] text-white font-semibold rounded-2xl hover:opacity-90 transition whitespace-nowrap"
+            
           >
             Select
           </button>
@@ -722,7 +722,7 @@ const router = useRouter();
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-5 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Sidebar filters */}
           <div className="lg:col-span-1">
             <FilterPanel
