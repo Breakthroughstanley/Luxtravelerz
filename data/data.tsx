@@ -14,7 +14,7 @@ import { TbActivityHeartbeat } from "react-icons/tb";
 export const NAV_LINKS = [
   {
     name: "Flights",
-    href: "/flights",
+    href: "/home",
     icon: MdFlight,
   },
   {
