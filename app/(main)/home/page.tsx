@@ -178,47 +178,132 @@ const handleSearch = (
           {/* SEARCH PANEL */}
          <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-lg">
   {/* TOP CONTROLS */}
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-    {/* ticket type */}
-    <div className="flex gap-2 bg-gray-100 rounded-full p-1 overflow-x-auto">
-      {["One Way", "Return", "Multi City"].map((type) => (
-        <button
-          key={type}
-          onClick={() => setForm({ ...form, ticketType: type })}
-          className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${
-            form.ticketType === type
-              ? "bg-[#6c47ff] text-white shadow"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+<div className="flex flex-col gap-4 mb-6">
+  <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+
+    {/* Ticket Type */}
+    <div className="w-full xl:w-auto">
+
+      {/* Mobile Select */}
+      <div className="relative xl:hidden">
+        <select
+          value={form.ticketType}
+          onChange={(e) =>
+            setForm({ ...form, ticketType: e.target.value })
+          }
+          className="w-full appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3 pr-12 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6c47ff]/30 focus:border-[#6c47ff] transition-all"
         >
-          {type}
-        </button>
-      ))}
+          {["One Way", "Return", "Multi City"].map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+
+        {/* Arrow */}
+        <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Desktop Buttons */}
+      <div className="hidden xl:flex gap-2 bg-gray-100 rounded-full p-1">
+        {["One Way", "Return", "Multi City"].map((type) => (
+          <button
+            key={type}
+            onClick={() => setForm({ ...form, ticketType: type })}
+            className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+              form.ticketType === type
+                ? "bg-[#6c47ff] text-white shadow-md"
+                : "text-gray-600 hover:text-gray-900 hover:bg-white"
+            }`}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
     </div>
 
-              {/* class */}
-              <div className="flex gap-2 bg-gray-100 rounded-full p-1">
-                {["Economy", "Premium Economy", "Business", "First"].map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setForm({ ...form, travelClass: c })}
-                    className={`px-5 py-2 rounded-full text-sm font-medium transition ${
-                      form.travelClass === c
-                        ? "bg-[#ffd166] text-gray-900 shadow"
-                        : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+    {/* Travel Class */}
+    <div className="w-full xl:w-auto">
 
-              {/* Add hotel checkbox */}
-              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded" />
-                Add a hotel
-              </label>
-            </div>
+      {/* Mobile Select */}
+      <div className="relative xl:hidden">
+        <select
+          value={form.travelClass}
+          onChange={(e) =>
+            setForm({ ...form, travelClass: e.target.value })
+          }
+          className="w-full appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3 pr-12 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ffd166]/40 focus:border-[#ffd166] transition-all"
+        >
+          {["Economy", "Premium Economy", "Business", "First"].map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+
+        {/* Arrow */}
+        <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Desktop Buttons */}
+      <div className="hidden xl:flex gap-2 bg-gray-100 rounded-full p-1">
+        {["Economy", "Premium Economy", "Business", "First"].map((c) => (
+          <button
+            key={c}
+            onClick={() => setForm({ ...form, travelClass: c })}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              form.travelClass === c
+                ? "bg-[#ffd166] text-gray-900 shadow-md"
+                : "text-gray-600 hover:text-gray-900 hover:bg-white"
+            }`}
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Add Hotel */}
+    <label className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm hover:border-[#6c47ff]/40 transition-all">
+      <input
+        type="checkbox"
+        className="w-4 h-4 rounded accent-[#6c47ff]"
+      />
+      <span className="font-medium">Add a hotel</span>
+    </label>
+
+  </div>
+</div>
 
             {/* MAIN INPUT ROW */}
             {/* ========================= */}
