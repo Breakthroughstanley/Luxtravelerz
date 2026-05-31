@@ -53,6 +53,12 @@ interface PriceRange {
   max: number;
 }
 
+interface MultiFlightSegment {
+  from: string;
+  to: string;
+  departure: string;
+}
+
 // ============================================================================
 // Dummy Data
 // ============================================================================
@@ -251,7 +257,6 @@ function FilterPanel({ filters, setFilters, flights }: FilterPanelProps): ReactN
     },
     [filters, setFilters]
   );
-  
 
   return (
     <div className="bg-white rounded-3xl border border-gray-200 p-5 md:p-6 h-fit lg:sticky lg:top-20">
@@ -370,7 +375,7 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
       }`}
     >
       {/* Main flight info */}
-  <div className="p-4 sm:p-5 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+      <div className="p-4 sm:p-5 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         {/* Left: Airline & Times */}
         <div className="flex-1">
           <div className="flex items-center gap-4 mb-4">
@@ -386,9 +391,9 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
             </div>
           </div>
 
-       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div>
-             <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {flight.departure}
               </p>
               <p className="text-xs text-gray-500">{flight.from}</p>
@@ -420,7 +425,7 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
         </div>
 
         {/* Right: Price & Rating */}
-      <div className="flex flex-col sm:flex-row xl:flex-col gap-4 xl:gap-2 items-start sm:items-center xl:items-end justify-between xl:justify-start">
+        <div className="flex flex-col sm:flex-row xl:flex-col gap-4 xl:gap-2 items-start sm:items-center xl:items-end justify-between xl:justify-start">
           <div>
             <p className="text-xs text-gray-500 mb-1">From</p>
             <p className="text-3xl font-bold text-[#6c47ff]">
@@ -439,11 +444,11 @@ function FlightCard({ flight, onSelect }: FlightCardProps): ReactNode {
           </div>
 
           <button
-  onClick={handleSelectClick}
-  className="px-5 py-2 bg-gradient-to-r from-[#6c47ff] to-[#5a3dd4] text-white rounded-full font-semibold hover:opacity-90 transition"
->
-  Select
-</button>
+            onClick={handleSelectClick}
+            className="px-5 py-2 bg-gradient-to-r from-[#6c47ff] to-[#5a3dd4] text-white rounded-full font-semibold hover:opacity-90 transition"
+          >
+            Select
+          </button>
         </div>
       </div>
 
@@ -519,7 +524,6 @@ function BookingModal({ flight, onClose }: BookingModalProps): ReactNode {
   if (!flight) return null;
 
   const handleContinueClick = useCallback(() => {
-    // TODO: Navigate to booking page or next step
     console.log("Continue to booking for flight:", flight.id);
   }, [flight]);
 
@@ -634,20 +638,49 @@ function BookingModal({ flight, onClose }: BookingModalProps): ReactNode {
 }
 
 // ============================================================================
-// Main Flight Results Page
+// Main Multi-City Flight Results Page
 // ============================================================================
 
-export default function FlightResultsPage(): ReactNode {
+export default function MultiCityFlightResultsPage(): ReactNode {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get data from URL params
+  const multiFlightsParam = searchParams.get("flights");
+  const adults = searchParams.get("adults") || "1";
+  const children = searchParams.get("children") || "0";
+
+  // Parse multi-flights
+  const multiFlights: MultiFlightSegment[] = useMemo(() => {
+    if (!multiFlightsParam) return [];
+    try {
+      return JSON.parse(decodeURIComponent(multiFlightsParam));
+    } catch {
+      return [];
+    }
+  }, [multiFlightsParam]);
+
+  // State management
   const [filters, setFilters] = useState<Filters>({
     priceMax: Math.max(...DUMMY_FLIGHTS.map((f) => f.price)),
     airlines: [],
     amenities: [],
   });
+
   const [sortBy, setSortBy] = useState<"price" | "duration" | "rating" | "departure">("price");
+  const [selectedFlights, setSelectedFlights] = useState<Record<number, Flight>>({});
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-const [selectedFlights, setSelectedFlights] = useState<
-  Record<number, Flight>
->({});
+
+  // Calculate total price
+  const totalPrice = useMemo(() => {
+    return Object.values(selectedFlights).reduce((sum, flight) => sum + flight.price, 0);
+  }, [selectedFlights]);
+
+  // Check if all flights are selected
+  const allFlightsSelected = useMemo(() => {
+    return Object.keys(selectedFlights).length === multiFlights.length;
+  }, [selectedFlights, multiFlights]);
+
   // Filter and sort flights
   const filteredFlights: Flight[] = useMemo(() => {
     let flights: Flight[] = DUMMY_FLIGHTS.filter((flight) => {
@@ -682,75 +715,31 @@ const [selectedFlights, setSelectedFlights] = useState<
     return flights;
   }, [filters, sortBy]);
 
+  // Handlers
   const handleCloseModal = useCallback(() => {
     setSelectedFlight(null);
   }, []);
 
-const handleSelectFlight = (flight: Flight) => {
-  setSelectedFlight(flight);
-};
+  const handleSelectMultiFlight = useCallback((segmentIndex: number, flight: Flight) => {
+    setSelectedFlights((prev) => ({
+      ...prev,
+      [segmentIndex]: flight,
+    }));
+  }, []);
 
-const handleSelectMultiFlight = (
-  segmentIndex: number,
-  flight: Flight
-) => {
-  setSelectedFlights((prev) => ({
-    ...prev,
-    [segmentIndex]: flight,
-  }));
-};
-const router = useRouter();
-const searchParams = useSearchParams();
+  const handleSortChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSortBy(
+        e.target.value as "price" | "duration" | "rating" | "departure"
+      );
+    },
+    []
+  );
 
-const ticketType = searchParams.get("ticketType");
-
-const from = searchParams.get("from");
-const to = searchParams.get("to");
-
-const departure = searchParams.get("departure");
-const returnDate = searchParams.get("return");
-
-const adults = searchParams.get("adults");
-const children = searchParams.get("children");
-
-const multiFlights =
-  ticketType === "multi-city"
-    ? JSON.parse(sessionStorage.getItem("lastFlightSearch") || "{}")?.multiFlights || []
-    : [];
-const handleSortChange = useCallback(
-  (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(
-      e.target.value as "price" | "duration" | "rating" | "departure"
-    );
-  },
-  []
-);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <Navbar />
-
-      {/* Search header */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-           <h1 className="text-2xl font-bold text-gray-900">
-  {ticketType === "multi-city"
-    ? "Multi-city Flights"
-    : `Flights from ${from} to ${to}`}
-</h1>
-            <p className="text-sm text-gray-500">
-              June 15, 2024 • 1 Passenger
-            </p>
-          </div>
-
-        <button
-  onClick={() => {
+  const handleEditSearch = useCallback(() => {
     const lastSearch = sessionStorage.getItem("lastFlightSearch");
-
     if (lastSearch) {
       const data = JSON.parse(lastSearch);
-
       const query = new URLSearchParams({
         ticketType: data.ticketType,
         from: data.from || "",
@@ -760,16 +749,48 @@ const handleSortChange = useCallback(
         adults: String(data.passengers?.adults || 1),
         children: String(data.passengers?.children || 0),
       }).toString();
-
       router.push(`/home?${query}`);
     } else {
       router.push("/home");
     }
-  }}
-  className="px-4 py-2 text-sm font-medium text-[#6c47ff] border border-[#6c47ff] rounded-full hover:bg-[#6c47ff]/5 transition"
->
-  ✏️ Edit search
-</button>
+  }, [router]);
+
+  const handleContinueToBooking = useCallback(() => {
+    if (allFlightsSelected) {
+      // Save selected flights and redirect to booking
+      const bookingData = {
+        multiFlights: selectedFlights,
+        totalPrice,
+        passengers: { adults: parseInt(adults), children: parseInt(children) },
+      };
+      sessionStorage.setItem("multiCityBooking", JSON.stringify(bookingData));
+      router.push("/flights/booking");
+    }
+  }, [allFlightsSelected, selectedFlights, totalPrice, adults, children, router]);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <Navbar />
+
+      {/* Search header */}
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+        <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Multi-city Flights
+            </h1>
+            <p className="text-sm text-gray-500">
+              {multiFlights.length} legs • {adults} Passenger{adults !== "1" ? "s" : ""}
+              {children !== "0" && ` • ${children} Child${children !== "1" ? "ren" : ""}`}
+            </p>
+          </div>
+
+          <button
+            onClick={handleEditSearch}
+            className="px-4 py-2 text-sm font-medium text-[#6c47ff] border border-[#6c47ff] rounded-full hover:bg-[#6c47ff]/5 transition"
+          >
+            ✏️ Edit search
+          </button>
         </div>
       </div>
 
@@ -787,49 +808,56 @@ const handleSortChange = useCallback(
 
           {/* Main results */}
           <div className="lg:col-span-3">
+            {/* Your Journey Summary */}
+            <div className="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
+              <h2 className="text-xl font-bold mb-4">Your Journey</h2>
 
-            {ticketType === "multi-city" && (
-  <div className="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
-    <h2 className="text-xl font-bold mb-4">
-      Your Journey
-    </h2>
+              <div className="space-y-3">
+                {multiFlights.map((flight, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#6c47ff] text-white flex items-center justify-center text-sm font-bold">
+                      {index + 1}
+                    </div>
 
-    <div className="space-y-3">
-      {multiFlights.map((flight: any, index: number) => (
-        <div
-          key={index}
-          className="flex items-center gap-3"
-        >
-          <div className="w-8 h-8 rounded-full bg-[#6c47ff] text-white flex items-center justify-center text-sm font-bold">
-            {index + 1}
-          </div>
+                    <div className="flex-1">
+                      <p className="font-medium">
+                        {flight.from} → {flight.to}
+                      </p>
 
-          <div>
-            <p className="font-medium">
-              {flight.from} → {flight.to}
-            </p>
+                      <p className="text-sm text-gray-500">
+                        {flight.departure}
+                      </p>
+                    </div>
 
-            <p className="text-sm text-gray-500">
-              {flight.departure}
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-{ticketType === "multi-city" && (
-  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
-    <p className="font-medium text-blue-700">
-      Selected {Object.keys(selectedFlights).length} of{" "}
-      {multiFlights.length} flights
-    </p>
-  </div>
-)}
+                    {selectedFlights[index] && (
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                        ✓ Selected
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Selection Progress */}
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+              <p className="font-medium text-blue-700">
+                Selected {Object.keys(selectedFlights).length} of {multiFlights.length} flights
+              </p>
+              <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${(Object.keys(selectedFlights).length / multiFlights.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+
             {/* Sort controls */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <p className="text-sm text-gray-600 font-medium">
-                Showing {filteredFlights.length} of {DUMMY_FLIGHTS.length} flights
+                Showing {filteredFlights.length} of {DUMMY_FLIGHTS.length} flights per segment
               </p>
 
               <div className="flex items-center gap-3">
@@ -850,79 +878,66 @@ const handleSortChange = useCallback(
               </div>
             </div>
 
-            {/* Flight cards */}
-        {filteredFlights.length > 0 ? (
-  ticketType === "multi-city" ? (
-    <div className="space-y-8">
-      {multiFlights.map((segment: any, index: number) => (
-        <div
-          key={index}
-          className="bg-white rounded-3xl border border-gray-200 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-xl font-bold">
-                Flight {index + 1}
-              </h3>
+            {/* Flight segments */}
+            {filteredFlights.length > 0 ? (
+              <div className="space-y-8">
+                {multiFlights.map((segment, index) => (
+                  <div
+                    key={index}
+                    className="bg-white rounded-3xl border border-gray-200 p-6"
+                  >
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <h3 className="text-xl font-bold">
+                          Flight {index + 1}
+                        </h3>
 
-              <p className="text-gray-500">
-                {segment.from} → {segment.to}
-              </p>
-            </div>
+                        <p className="text-gray-500">
+                          {segment.from} → {segment.to}
+                        </p>
+                      </div>
 
-            {selectedFlights[index] && (
-              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                Selected
-              </span>
-            )}
-          </div>
+                      {selectedFlights[index] && (
+                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                          Selected
+                        </span>
+                      )}
+                    </div>
 
-          {/* FLIGHTS LIST (PER SEGMENT) */}
-          <div className="space-y-4">
-            {filteredFlights
-              .filter(
-                (flight) =>
-                  flight.from.includes(segment.from) &&
-                  flight.to.includes(segment.to)
-              )
-              .map((flight) => (
-                <FlightCard
-                  key={`${index}-${flight.id}`}
-                  flight={{
-                    ...flight,
-                    from: segment.from,
-                    to: segment.to,
-                    departureDate: segment.departure,
-                  }}
-                  onSelect={(flight) =>
-                    handleSelectMultiFlight(index, flight)
-                  }
-                />
-              ))}
-          </div>
+                    {/* Flights list for this segment */}
+                    <div className="space-y-4">
+                      {filteredFlights.map((flight) => (
+                        <FlightCard
+                          key={`${index}-${flight.id}`}
+                          flight={{
+                            ...flight,
+                            from: segment.from,
+                            to: segment.to,
+                            departureDate: segment.departure,
+                          }}
+                          onSelect={(flight) =>
+                            handleSelectMultiFlight(index, flight)
+                          }
+                        />
+                      ))}
+                    </div>
 
-          {/* SELECTED INFO */}
-          {selectedFlights[index] && (
-            <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-xl text-sm">
-              Selected: {selectedFlights[index].airline} - ₦
-              {selectedFlights[index].price.toLocaleString()}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  ) : (
-    <div className="space-y-4">
-      {filteredFlights.map((flight) => (
-        <FlightCard
-          key={flight.id}
-          flight={flight}
-          onSelect={handleSelectFlight}
-        />
-      ))}
-    </div>
-  )
-) : (
+                    {/* Selected flight info */}
+                    {selectedFlights[index] && (
+                      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700">
+                        <p className="text-sm font-medium">
+                          Selected: <span className="font-bold">{selectedFlights[index].airline}</span> - Flight{" "}
+                          <span className="font-bold">{selectedFlights[index].flightNumber}</span>
+                        </p>
+                        <p className="text-sm mt-1">
+                          Price: <span className="font-bold">₦{selectedFlights[index].price.toLocaleString()}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
               <div className="text-center py-12">
                 <MdInfoOutline size={48} className="mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -933,20 +948,41 @@ const handleSortChange = useCallback(
                 </p>
               </div>
             )}
+
+            {/* Continue to Booking Button */}
+            {allFlightsSelected && (
+              <div className="mt-8 p-6 bg-gradient-to-r from-[#6c47ff]/5 to-[#ffd166]/5 border border-[#6c47ff]/20 rounded-3xl">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <p className="text-gray-600 mb-1">Total journey cost</p>
+                    <p className="text-3xl font-bold text-[#6c47ff]">
+                      ₦{totalPrice.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleContinueToBooking}
+                    className="px-8 py-4 bg-gradient-to-r from-[#6c47ff] to-[#5a3dd4] text-white font-bold rounded-2xl hover:opacity-90 transition shadow-lg"
+                  >
+                    Continue to Booking
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-  {selectedFlight && (
-  <BookingModal
-    flight={selectedFlight}
-    onClose={handleCloseModal}
-  />
-)}
+
+      {/* Modal */}
+      {selectedFlight && (
+        <BookingModal
+          flight={selectedFlight}
+          onClose={handleCloseModal}
+        />
+      )}
+
       {/* Footer */}
       <Footer />
-
-      {/* Booking modal */}
-    
     </div>
   );
 }

@@ -891,7 +891,7 @@ className="w-full h-full min-h-[78px] rounded-2xl bg-gradient-to-r from-[#6c47ff
       </button>
 
       {/* SEARCH */}
-   {/* SEARCH */}
+   {/* SEARCH - UPDATED TO ROUTE TO MULTI-CITY RESULTS PAGE */}
 <button
  onClick={() => {
   const searchData = {
@@ -911,8 +911,11 @@ className="w-full h-full min-h-[78px] rounded-2xl bg-gradient-to-r from-[#6c47ff
     JSON.stringify(searchData)
   );
 
+  // ✅ ROUTE TO DEDICATED MULTI-CITY PAGE
   router.push(
-    `/flights/results?ticketType=${form.ticketType}&from=${form.from}&to=${form.to}&departure=${form.departure}&return=${form.returnDate}&adults=${form.passengers.adults}&children=${form.passengers.children}`
+    `/flights/multi-city?flights=${encodeURIComponent(
+      JSON.stringify(form.multiFlights)
+    )}&adults=${form.passengers.adults}&children=${form.passengers.children}`
   );
 }}
   className="h-16 rounded-2xl bg-gradient-to-r from-[#6c47ff] via-[#7b5cff] to-[#8b6dff] text-white font-bold text-base shadow-[0_10px_35px_rgba(108,71,255,0.25)] hover:scale-[1.02] transition-all duration-300"
