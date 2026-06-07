@@ -9,6 +9,7 @@ import type { AuthOptions } from "next-auth";
 
 
 export const authOptions: AuthOptions = { 
+  trustHost: true
   adapter: PrismaAdapter(prisma),
 
   providers: [
